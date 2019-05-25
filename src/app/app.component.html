@@ -1,20 +1,81 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div class="content">
+<div *ngIf="error" class="text-danger">{{error}}</div>
+<div *ngIf="success" class="text-success">{{success}}</div>
+    
+<div id="theList" class="p-5" style="width:70%">
+  <h2>The list</h2>
 
+  <div class="list-group ">
+    <div *ngFor="let item of avengers;let i = index;" class="row p-2">
+      <div class="col-sm-4">
+        <input type="text"
+               [(ngModel)]="avengers[i].model"
+               class="form-control"
+               required
+               pattern="^[a-zA-Z]+$"
+               #model="ngModel"
+               [ngClass]="{ 'is-invalid': model.touched && model.invalid }">
+      </div>
+      <div class="col-sm-4">
+        <input type="number"
+               [(ngModel)]="avengers[i].price"
+               class="form-control"
+               required
+               #price="ngModel"
+               [ngClass]="{ 'is-invalid': price.touched && price.invalid }">
+      </div>
+      <div class="col-sm-4">
+        <input type="button"
+               value="Update"
+               class="btn btn-success btn-sm"
+               [disabled]="model.invalid || price.invalid"
+               (click)="updateAvenger(model, price, item.id)">
+        <input type="button"
+               value="Delete"
+               class="btn btn-danger btn-sm"
+               (click)="deleteAvenger(item.id)"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="theForm" class="p-5" style="width:70%">
+  <h2>The form</h2>
+  <form #f="ngForm" name="theForm" (submit)="addAvenger(f)">
+    <div class="form-group">
+      <label>Model</label>
+      <input type="text"
+            class="form-control"
+            name="model"
+            [(ngModel)]="avenger.model"
+            #avengerModel="ngModel"
+            required
+            pattern="^[a-zA-Z]+$">
+      <span class="help-block danger" *ngIf="avengerModel.errors?.required && avengerModel.touched">
+        The model name is required
+      </span>
+      <span class="help-block danger" *ngIf="avengerModel.errors?.pattern && avengerModel.touched">
+        The model name can only contain the letters a-z or A-Z
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number"
+            class="form-control"
+            name="price"
+            required
+            [(ngModel)]="avenger.price"
+            #avengerPrice="ngModel">
+      <span class="help-block danger" *ngIf="avengerPrice.errors?.required && avengerPrice.touched">
+        The price is required
+      </span>
+    </div>
+
+    <button
+        class="btn btn-primary btn-sm"
+        [disabled]="f.invalid">Add</button>
+  </form>
+</div>
+
+</div>
